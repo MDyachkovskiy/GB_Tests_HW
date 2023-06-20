@@ -13,13 +13,23 @@ import java.util.Locale
 class DetailsActivity : AppCompatActivity(), ViewDetailsContract {
 
     private lateinit var binding: ActivityDetailsBinding
-    private val presenter: PresenterDetailsContract = DetailsPresenter(this)
+    private val presenter: PresenterDetailsContract = DetailsPresenter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityDetailsBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setUI()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        presenter.onAttach(this)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        presenter.onDetach()
     }
 
     private fun setUI() {
