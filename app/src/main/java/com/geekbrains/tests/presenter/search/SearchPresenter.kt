@@ -15,13 +15,21 @@ import retrofit2.Response
  */
 
 internal class SearchPresenter internal constructor(
-    private val viewContract: ViewSearchContract,
+    private var viewContract: ViewSearchContract,
     private val repository: GitHubRepository
 ) : PresenterSearchContract, GitHubRepositoryCallback {
 
     override fun searchGitHub(searchQuery: String) {
         viewContract.displayLoading(true)
         repository.searchGithub(searchQuery, this)
+    }
+
+    override fun onAttach(view: ViewSearchContract) {
+        this.viewContract = view
+    }
+
+    override fun onDetach() {
+        this.
     }
 
     override fun handleGitHubResponse(response: Response<SearchResponse?>?) {
