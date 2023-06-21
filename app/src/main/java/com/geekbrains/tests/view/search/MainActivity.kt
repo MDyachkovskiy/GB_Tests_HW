@@ -24,6 +24,7 @@ class MainActivity : AppCompatActivity(), ViewSearchContract {
     private var totalCount: Int = 0
 
     private lateinit var binding: ActivityMainBinding
+    val _binding get() = binding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
