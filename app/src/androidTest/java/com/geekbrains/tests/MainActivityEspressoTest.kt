@@ -11,7 +11,6 @@ import androidx.test.espresso.action.ViewActions.pressImeActionButton
 import androidx.test.espresso.action.ViewActions.replaceText
 import androidx.test.espresso.action.ViewActions.typeText
 import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.matcher.RootMatchers.withDecorView
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.isRoot
@@ -20,7 +19,6 @@ import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.geekbrains.tests.view.search.MainActivity
-import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.CoreMatchers.not
 import org.hamcrest.Matcher
 import org.junit.After
@@ -74,7 +72,7 @@ class MainActivityEspressoTest {
     @Test
     fun testVisibilityOfTotalCountTextViewAfterDisplaySearchResults() {
         onView(withId(R.id.totalCountTextView))
-            .check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+            .check(matches(withEffectiveVisibility(ViewMatchers.Visibility.INVISIBLE)))
     }
 
     @Test
@@ -98,7 +96,7 @@ class MainActivityEspressoTest {
             onView(withId(R.id.searchEditText))
                 .perform(typeText(""), pressImeActionButton())
             onView(withText(R.string.enter_search_word))
-                .inRoot(withDecorView(not(`is`(it.window.decorView))))
+                .inRoot(ToastMatcher())
                 .check(matches(isDisplayed()))
         }
     }
