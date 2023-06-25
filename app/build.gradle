@@ -41,7 +41,6 @@ android {
 
     buildFeatures {
         viewBinding true
-        buildConfig true
     }
 
     namespace 'com.geekbrains.tests'

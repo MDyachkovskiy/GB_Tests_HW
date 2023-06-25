@@ -101,6 +101,4 @@ class MainActivity : AppCompatActivity(), ViewSearchContract {
             binding.progressBar.visibility = View.GONE
         }
     }
-
-
 }
