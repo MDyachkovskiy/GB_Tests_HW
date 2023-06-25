@@ -90,4 +90,9 @@ dependencies {
     testImplementation 'androidx.test.ext:truth:1.5.0'
     testImplementation 'androidx.test.espresso:espresso-core:3.5.1'
     testImplementation 'androidx.test.espresso:espresso-intents:3.5.1'
+
+    //Koin
+    implementation 'io.insert-koin:koin-core:3.1.4'
+    implementation 'io.insert-koin:koin-android:3.1.4'
+    implementation 'io.insert-koin:koin-android-compat:3.1.4'
 }

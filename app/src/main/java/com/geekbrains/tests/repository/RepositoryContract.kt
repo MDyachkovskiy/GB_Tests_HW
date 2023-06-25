@@ -1,6 +1,6 @@
 package com.geekbrains.tests.repository
 
-internal interface RepositoryContract {
+interface RepositoryContract {
     fun searchGithub(
         query: String,
         callback: RepositoryCallback
