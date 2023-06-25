@@ -58,13 +58,11 @@ class MainActivityEspressoTest {
 
     @Test
     fun checkToastMessageWhenSearchQueryIsEmpty() {
-        scenario.onActivity {
             onView(withId(R.id.searchEditText))
                 .perform(typeText(""), pressImeActionButton())
             onView(withText(R.string.enter_search_word))
                 .inRoot(ToastMatcher())
                 .check(matches(isDisplayed()))
-        }
     }
 
     @Test
