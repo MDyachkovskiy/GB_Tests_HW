@@ -46,17 +46,17 @@ android {
 
     namespace 'com.geekbrains.tests'
 
-    flavorDimensions "default"
+    flavorDimensions 'version'
     productFlavors {
         fake {
-            applicationIdSuffix ".fake"
-            versionNameSuffix "-fake"
-            buildConfigField "String", "TYPE",'"FAKE"'
+            dimension 'version'
+            applicationIdSuffix '.fake'
+            versionNameSuffix '-fake'
         }
         real {
-            applicationIdSuffix ".real"
-            versionNameSuffix "-real"
-            buildConfigField "String", "TYPE", '"REAL"'
+            dimension 'version'
+            applicationIdSuffix '.real'
+            versionNameSuffix '-real'
         }
     }
 }
