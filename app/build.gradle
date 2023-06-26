@@ -94,4 +94,7 @@ dependencies {
     implementation 'io.insert-koin:koin-core:3.1.4'
     implementation 'io.insert-koin:koin-android:3.1.4'
     implementation 'io.insert-koin:koin-android-compat:3.1.4'
+
+    //UI Automator
+    androidTestImplementation 'androidx.test.uiautomator:uiautomator:2.2.0'
 }
