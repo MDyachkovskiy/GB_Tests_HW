@@ -46,6 +46,15 @@ class MainActivity : AppCompatActivity(), ViewSearchContract {
         }
         setQueryListener()
         setRecyclerView()
+
+        binding.searchButton.setOnClickListener {
+            val query = binding.searchEditText.text.toString()
+            if (query.isNotBlank()) {
+                presenter.searchGitHub(query)
+            } else {
+                showEmptyTextToastMessage()
+            }
+        }
     }
 
     private fun setRecyclerView() {
@@ -61,11 +70,7 @@ class MainActivity : AppCompatActivity(), ViewSearchContract {
                     presenter.searchGitHub(query)
                     return@OnEditorActionListener true
                 } else {
-                    Toast.makeText(
-                        this@MainActivity,
-                        getString(R.string.enter_search_word),
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    showEmptyTextToastMessage()
                     return@OnEditorActionListener false
                 }
             }
@@ -84,6 +89,14 @@ class MainActivity : AppCompatActivity(), ViewSearchContract {
 
         this.totalCount = totalCount
         adapter.updateResults(searchResults)
+    }
+
+    private fun showEmptyTextToastMessage() {
+        Toast.makeText(
+            this@MainActivity,
+            getString(R.string.enter_search_word),
+            Toast.LENGTH_SHORT
+        ).show()
     }
 
     override fun displayError() {
