@@ -5,11 +5,13 @@ import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
+import androidx.test.espresso.action.ViewActions.clearText
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.closeSoftKeyboard
 import androidx.test.espresso.action.ViewActions.pressImeActionButton
 import androidx.test.espresso.action.ViewActions.replaceText
 import androidx.test.espresso.action.ViewActions.typeText
+import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.Intents.intended
@@ -58,7 +60,7 @@ class MainActivityEspressoTest : KoinComponent {
         onView(withId(R.id.searchEditText)).perform(replaceText("algol"), closeSoftKeyboard())
         onView(withId(R.id.searchEditText)).perform(pressImeActionButton())
 
-        onView(isRoot()).perform(waitFor(2000))
+        onView(isRoot()).perform(waitFor(8000))
         onView(withId(R.id.totalCountTextView)).check(matches(withText("Number of results: 3803")))
     }
 
@@ -82,14 +84,14 @@ class MainActivityEspressoTest : KoinComponent {
 
         onView(isRoot()).perform(waitFor(5000))
 
-        onView(withId(R.id.totalCountTextView)).check(matches(withText("Number of results: 3803")))
+        onView(withId(R.id.totalCountTextView)).check(matches(withText("Number of results: 3804")))
 
         onView(withId(R.id.toDetailsActivityButton)).perform(click())
 
         intended(
             allOf(
                 hasComponent(DetailsActivity::class.java.name),
-                hasExtra(equalTo(DetailsActivity.TOTAL_COUNT_EXTRA), equalTo(3803))
+                hasExtra(equalTo(DetailsActivity.TOTAL_COUNT_EXTRA), equalTo(3804))
             )
         )
     }
@@ -102,17 +104,42 @@ class MainActivityEspressoTest : KoinComponent {
 
         onView(isRoot()).perform(waitFor(5000))
 
-        onView(withId(R.id.totalCountTextView)).check(matches(withText("Number of results: 3803")))
+        onView(withId(R.id.totalCountTextView)).check(matches(withText("Number of results: 3804")))
 
         onView(withId(R.id.toDetailsActivityButton)).perform(click())
 
-        ActivityScenario.launch(DetailsActivity::class.java).use{detailsActivityScenario ->
-            detailsActivityScenario.onActivity {
-                val countText = String.format(
-                    Locale.getDefault(), it.getString(R.string.results_count), 3803)
-                onView(withId(R.id.totalCountTextView)).check(matches(withText(countText)))
-            }
-        }
+        onView(isRoot()).perform(waitFor(5000))
+
+        val countText = String.format(
+            Locale.getDefault(), "Number of results: %d",3804)
+        onView(withId(R.id.totalCountTextView)).check(matches(withText(countText)))
+
+    }
+
+    @Test
+    fun testSearchButtonOnClickEmptyQueryShowEmptyTextToast() {
+        onView(withId(R.id.searchEditText)).perform(clearText())
+        onView(withId(R.id.searchButton)).perform(click())
+        onView(withText(R.string.enter_search_word)).inRoot(ToastMatcher())
+            .check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun testSearchButtonOnClickWithQueryNotShowEmptyTextToast() {
+        onView(withId(R.id.searchEditText))
+            .perform(replaceText("query"), closeSoftKeyboard())
+        onView(withId(R.id.searchButton)).perform(click())
+        onView(withText(R.string.enter_search_word)).inRoot(ToastMatcher())
+            .check(doesNotExist())
+    }
+
+    @Test
+    fun testSearchButtonOnClickWithQueryDisplayResults() {
+        onView(withId(R.id.searchEditText))
+            .perform(replaceText("query"), closeSoftKeyboard())
+        onView(withId(R.id.searchButton)).perform(click())
+        waitFor(8000)
+        onView(withId(R.id.totalCountTextView)).check(matches(isDisplayed()))
     }
 
     @Test

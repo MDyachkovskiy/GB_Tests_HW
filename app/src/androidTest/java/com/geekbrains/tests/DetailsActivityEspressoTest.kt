@@ -16,6 +16,7 @@ import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.geekbrains.tests.view.details.DetailsActivity
 import junit.framework.TestCase
+import junit.framework.TestCase.assertEquals
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
@@ -45,7 +46,7 @@ class DetailsActivityEspressoTest {
 
     @Test
     fun activity_IsResumed() {
-        TestCase.assertEquals(Lifecycle.State.RESUMED, scenario.state)
+        assertEquals(Lifecycle.State.RESUMED, scenario.state)
     }
 
     @Test
@@ -93,5 +94,27 @@ class DetailsActivityEspressoTest {
         onView(withId(R.id.decrementButton)).perform(click())
         onView(withId(R.id.totalCountTextView))
             .check(matches(withText("Number of results: -1")))
+    }
+
+    @Test
+    fun whenIncrementButtonClicked() {
+        val initialCount = 0
+        scenario.onActivity {
+            it._binding.incrementButton.performClick()
+            val expectedCount = "Number of results: ${initialCount + 1}"
+            val actualCount = it._binding.totalCountTextView.text.toString()
+            assertEquals(expectedCount, actualCount)
+        }
+    }
+
+    @Test
+    fun whenDecrementButtonClicked() {
+        val initialCount = 0
+        scenario.onActivity {
+            it._binding.decrementButton.performClick()
+            val expectedCount = "Number of results: ${initialCount - 1}"
+            val actualCount = it._binding.totalCountTextView.text.toString()
+            assertEquals(expectedCount,actualCount)
+        }
     }
 }
