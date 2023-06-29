@@ -14,6 +14,9 @@ import androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.geekbrains.tests.shared_test.TEST_NUMBER_OF_RESULTS_MINUS_1
+import com.geekbrains.tests.shared_test.TEST_NUMBER_OF_RESULTS_PLUS_1
+import com.geekbrains.tests.shared_test.TEST_NUMBER_OF_RESULTS_ZERO
 import com.geekbrains.tests.view.details.DetailsActivity
 import junit.framework.TestCase
 import junit.framework.TestCase.assertEquals
@@ -59,7 +62,7 @@ class DetailsActivityEspressoTest {
 
     @Test
     fun activityTextView_HasText() {
-        val assertion: ViewAssertion = matches(withText("Number of results: 0"))
+        val assertion: ViewAssertion = matches(withText(TEST_NUMBER_OF_RESULTS_ZERO))
         onView(withId(R.id.totalCountTextView)).check(assertion)
     }
 
@@ -86,22 +89,21 @@ class DetailsActivityEspressoTest {
     fun activityButtonIncrement_IsWorking() {
         onView(withId(R.id.incrementButton)).perform(click())
         onView(withId(R.id.totalCountTextView))
-            .check(matches(withText("Number of results: 1")))
+            .check(matches(withText(TEST_NUMBER_OF_RESULTS_PLUS_1)))
     }
 
     @Test
     fun activityButtonDecrement_isWorking() {
         onView(withId(R.id.decrementButton)).perform(click())
         onView(withId(R.id.totalCountTextView))
-            .check(matches(withText("Number of results: -1")))
+            .check(matches(withText(TEST_NUMBER_OF_RESULTS_MINUS_1)))
     }
 
     @Test
     fun whenIncrementButtonClicked() {
-        val initialCount = 0
         scenario.onActivity {
             it._binding.incrementButton.performClick()
-            val expectedCount = "Number of results: ${initialCount + 1}"
+            val expectedCount = TEST_NUMBER_OF_RESULTS_PLUS_1
             val actualCount = it._binding.totalCountTextView.text.toString()
             assertEquals(expectedCount, actualCount)
         }
@@ -109,10 +111,9 @@ class DetailsActivityEspressoTest {
 
     @Test
     fun whenDecrementButtonClicked() {
-        val initialCount = 0
         scenario.onActivity {
             it._binding.decrementButton.performClick()
-            val expectedCount = "Number of results: ${initialCount - 1}"
+            val expectedCount = TEST_NUMBER_OF_RESULTS_MINUS_1
             val actualCount = it._binding.totalCountTextView.text.toString()
             assertEquals(expectedCount,actualCount)
         }

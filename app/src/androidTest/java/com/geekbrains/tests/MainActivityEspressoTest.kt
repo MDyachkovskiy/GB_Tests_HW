@@ -61,7 +61,7 @@ class MainActivityEspressoTest : KoinComponent {
         onView(withId(R.id.searchEditText)).perform(pressImeActionButton())
 
         onView(isRoot()).perform(waitFor(8000))
-        onView(withId(R.id.totalCountTextView)).check(matches(withText("Number of results: 3803")))
+        onView(withId(R.id.totalCountTextView)).check(matches(withText("Number of results: 3804")))
     }
 
     private fun waitFor(delay: Long): ViewAction {

@@ -9,6 +9,9 @@ import androidx.lifecycle.Lifecycle
 import androidx.test.core.app.ActivityScenario
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.geekbrains.tests.shared_test.TEST_NUMBER
+import com.geekbrains.tests.shared_test.TEST_NUMBER_OF_RESULTS_MINUS_1
+import com.geekbrains.tests.shared_test.TEST_NUMBER_OF_RESULTS_PLUS_1
 import com.geekbrains.tests.view.details.DetailsActivity
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertNotNull
@@ -60,7 +63,7 @@ class DetailsActivityTest {
     fun activityTextView_HasText() {
         scenario.onActivity {
             val totalCountTextView = it.findViewById<TextView>(R.id.totalCountTextView)
-            assertEquals("Number of results: 0", totalCountTextView.text)
+            assertEquals(TEST_NUMBER, totalCountTextView.text)
         }
     }
 
@@ -89,7 +92,7 @@ class DetailsActivityTest {
             val totalCountTextView = it.findViewById<TextView>(R.id.totalCountTextView)
             incrementButton.performClick()
 
-            assertEquals("Number of results: 1", totalCountTextView.text)
+            assertEquals(TEST_NUMBER_OF_RESULTS_PLUS_1, totalCountTextView.text)
         }
     }
 
@@ -100,7 +103,7 @@ class DetailsActivityTest {
             val totalCountTextView = it.findViewById<TextView>(R.id.totalCountTextView)
             decrementButton.performClick()
 
-            assertEquals("Number of results: -1", totalCountTextView.text)
+            assertEquals(TEST_NUMBER_OF_RESULTS_MINUS_1, totalCountTextView.text)
         }
     }
 
@@ -119,9 +122,8 @@ class DetailsActivityTest {
 
     @Test
     fun activityCreateIntent_HasCount() {
-        val count = 42
-        val intent = DetailsActivity.getIntent(context, 0)
+        val intent = DetailsActivity.getIntent(context, TEST_NUMBER)
         val bundle = intent.extras
-        assertEquals(count, bundle?.getInt(DetailsActivity.TOTAL_COUNT_EXTRA, 0))
+        assertEquals(TEST_NUMBER, bundle?.getInt(DetailsActivity.TOTAL_COUNT_EXTRA, 0))
     }
 }
