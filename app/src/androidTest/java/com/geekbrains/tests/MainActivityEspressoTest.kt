@@ -1,7 +1,6 @@
 package com.geekbrains.tests
 
 import android.view.View
-import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
@@ -24,6 +23,10 @@ import androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.geekbrains.tests.shared_test.BaseActivityTest
+import com.geekbrains.tests.shared_test.EMPTY_QUERY
+import com.geekbrains.tests.shared_test.QUERY_ALGOL
+import com.geekbrains.tests.shared_test.RESULT_ALGOL
 import com.geekbrains.tests.view.details.DetailsActivity
 import com.geekbrains.tests.view.search.MainActivity
 import org.hamcrest.CoreMatchers.allOf
@@ -34,34 +37,33 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.koin.core.component.KoinComponent
 import java.util.Locale
 
 @RunWith(AndroidJUnit4::class)
-class MainActivityEspressoTest : KoinComponent {
-
-    private lateinit var scenario: ActivityScenario<MainActivity>
+class MainActivityEspressoTest : BaseActivityTest<MainActivity>() {
 
     @Before
-    fun setup() {
-        scenario = ActivityScenario.launch(MainActivity::class.java)
+    override fun setup() {
+        super.setup()
         Intents.init()
     }
 
     @After
-    fun close() {
-        scenario.close()
+    override fun close() {
+        super.close()
         Intents.release()
     }
+
+    override fun getActivityClass() = MainActivity::class.java
 
     @Test
     fun activitySearch_IsWorking() {
         onView(withId(R.id.searchEditText)).perform(click())
-        onView(withId(R.id.searchEditText)).perform(replaceText("algol"), closeSoftKeyboard())
+        onView(withId(R.id.searchEditText)).perform(replaceText(QUERY_ALGOL), closeSoftKeyboard())
         onView(withId(R.id.searchEditText)).perform(pressImeActionButton())
 
         onView(isRoot()).perform(waitFor(8000))
-        onView(withId(R.id.totalCountTextView)).check(matches(withText("Number of results: 3804")))
+        onView(withId(R.id.totalCountTextView)).check(matches(withText(RESULT_ALGOL)))
     }
 
     private fun waitFor(delay: Long): ViewAction {
@@ -79,12 +81,12 @@ class MainActivityEspressoTest : KoinComponent {
     @Test
     fun testByIntent_toDetailsActivityButton_launchesDetailsActivity_withCorrectRepositoryCount() {
         onView(withId(R.id.searchEditText)).perform(click(),
-        replaceText("algol"), closeSoftKeyboard())
+        replaceText(QUERY_ALGOL), closeSoftKeyboard())
         onView(withId(R.id.searchButton)).perform(click())
 
         onView(isRoot()).perform(waitFor(5000))
 
-        onView(withId(R.id.totalCountTextView)).check(matches(withText("Number of results: 3804")))
+        onView(withId(R.id.totalCountTextView)).check(matches(withText(RESULT_ALGOL)))
 
         onView(withId(R.id.toDetailsActivityButton)).perform(click())
 
@@ -99,12 +101,12 @@ class MainActivityEspressoTest : KoinComponent {
     @Test
     fun testByTextView_toDetailsActivityButton_launchesDetailsActivity_withCorrectRepositoryCount() {
         onView(withId(R.id.searchEditText)).perform(click(),
-            replaceText("algol"), closeSoftKeyboard())
+            replaceText(QUERY_ALGOL), closeSoftKeyboard())
         onView(withId(R.id.searchButton)).perform(click())
 
         onView(isRoot()).perform(waitFor(5000))
 
-        onView(withId(R.id.totalCountTextView)).check(matches(withText("Number of results: 3804")))
+        onView(withId(R.id.totalCountTextView)).check(matches(withText(RESULT_ALGOL)))
 
         onView(withId(R.id.toDetailsActivityButton)).perform(click())
 
@@ -127,7 +129,7 @@ class MainActivityEspressoTest : KoinComponent {
     @Test
     fun testSearchButtonOnClickWithQueryNotShowEmptyTextToast() {
         onView(withId(R.id.searchEditText))
-            .perform(replaceText("query"), closeSoftKeyboard())
+            .perform(replaceText(QUERY_ALGOL), closeSoftKeyboard())
         onView(withId(R.id.searchButton)).perform(click())
         onView(withText(R.string.enter_search_word)).inRoot(ToastMatcher())
             .check(doesNotExist())
@@ -136,7 +138,7 @@ class MainActivityEspressoTest : KoinComponent {
     @Test
     fun testSearchButtonOnClickWithQueryDisplayResults() {
         onView(withId(R.id.searchEditText))
-            .perform(replaceText("query"), closeSoftKeyboard())
+            .perform(replaceText(QUERY_ALGOL), closeSoftKeyboard())
         onView(withId(R.id.searchButton)).perform(click())
         waitFor(8000)
         onView(withId(R.id.totalCountTextView)).check(matches(isDisplayed()))
@@ -166,7 +168,7 @@ class MainActivityEspressoTest : KoinComponent {
     @Test
     fun checkToastMessageWhenSearchQueryIsEmpty() {
             onView(withId(R.id.searchEditText))
-                .perform(typeText(""), pressImeActionButton())
+                .perform(typeText(EMPTY_QUERY), pressImeActionButton())
             onView(withText(R.string.enter_search_word))
                 .inRoot(ToastMatcher())
                 .check(matches(isDisplayed()))
@@ -175,8 +177,8 @@ class MainActivityEspressoTest : KoinComponent {
     @Test
     fun checkIfTextIsEnteredInEditText() {
         onView(withId(R.id.searchEditText))
-            .perform(typeText("query"), closeSoftKeyboard())
+            .perform(typeText(QUERY_ALGOL), closeSoftKeyboard())
         onView(withId(R.id.searchEditText))
-            .check(matches(withText("query")))
+            .check(matches(withText(QUERY_ALGOL)))
     }
 }

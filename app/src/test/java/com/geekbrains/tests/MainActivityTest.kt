@@ -1,18 +1,14 @@
 package com.geekbrains.tests
 
-import android.content.Context
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import android.widget.TextView
-import androidx.lifecycle.Lifecycle
-import androidx.test.core.app.ActivityScenario
-import androidx.test.core.app.ApplicationProvider
 import com.geekbrains.tests.presenter.search.PresenterSearchContract
+import com.geekbrains.tests.shared_test.BaseActivityTest
 import com.geekbrains.tests.view.search.MainActivity
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertNotNull
-import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -22,35 +18,17 @@ import org.robolectric.shadows.ShadowLooper
 import org.robolectric.shadows.ShadowToast
 
 @RunWith(RobolectricTestRunner::class)
-class MainActivityTest {
+class MainActivityTest : BaseActivityTest<MainActivity>() {
 
-    private lateinit var scenario: ActivityScenario<MainActivity>
-    private lateinit var context: Context
     private lateinit var presenter: PresenterSearchContract
 
     @Before
-    fun setUp() {
-        scenario = ActivityScenario.launch(MainActivity::class.java)
-        context = ApplicationProvider.getApplicationContext()
+    override fun setup() {
+        super.setup()
         presenter = mock(PresenterSearchContract::class.java)
     }
 
-    @After
-    fun close() {
-        scenario.close()
-    }
-
-    @Test
-    fun onCreate_isCalled_onActivityCreation() {
-        scenario.onActivity{
-            assertNotNull(it)
-        }
-    }
-
-    @Test
-    fun activity_isResumed() {
-        assertEquals(Lifecycle.State.RESUMED, scenario.state)
-    }
+    override fun getActivityClass() = MainActivity::class.java
 
     @Test
     fun whenQueryIsNotBlank_searchGitHubCalled() {

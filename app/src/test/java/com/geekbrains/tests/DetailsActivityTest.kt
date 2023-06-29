@@ -1,55 +1,24 @@
 package com.geekbrains.tests
 
-import android.content.Context
 import android.os.Build
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
-import androidx.lifecycle.Lifecycle
-import androidx.test.core.app.ActivityScenario
-import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.geekbrains.tests.shared_test.BaseActivityTest
 import com.geekbrains.tests.shared_test.TEST_NUMBER
 import com.geekbrains.tests.shared_test.TEST_NUMBER_OF_RESULTS_MINUS_1
 import com.geekbrains.tests.shared_test.TEST_NUMBER_OF_RESULTS_PLUS_1
 import com.geekbrains.tests.view.details.DetailsActivity
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertNotNull
-import org.junit.After
-import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.annotation.Config
 
 @RunWith(AndroidJUnit4::class)
 @Config(sdk = [Build.VERSION_CODES.O_MR1])
-class DetailsActivityTest {
-
-    private lateinit var scenario: ActivityScenario<DetailsActivity>
-    private lateinit var context: Context
-
-    @Before
-    fun setup() {
-        scenario = ActivityScenario.launch(DetailsActivity::class.java)
-        context = ApplicationProvider.getApplicationContext()
-    }
-
-    @After
-    fun close() {
-        scenario.close()
-    }
-
-    @Test
-    fun activity_AssertNotNull() {
-        scenario.onActivity {
-            assertNotNull(it)
-        }
-    }
-
-    @Test
-    fun activity_IsResumed() {
-        assertEquals(Lifecycle.State.RESUMED, scenario.state)
-    }
+class DetailsActivityTest : BaseActivityTest<DetailsActivity>() {
 
     @Test
     fun activityTextView_NotNull() {
@@ -126,4 +95,6 @@ class DetailsActivityTest {
         val bundle = intent.extras
         assertEquals(TEST_NUMBER, bundle?.getInt(DetailsActivity.TOTAL_COUNT_EXTRA, 0))
     }
+
+    override fun getActivityClass() = DetailsActivity::class.java
 }
