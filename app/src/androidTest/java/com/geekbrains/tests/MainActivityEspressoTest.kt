@@ -1,9 +1,6 @@
 package com.geekbrains.tests
 
-import android.view.View
 import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.UiController
-import androidx.test.espresso.ViewAction
 import androidx.test.espresso.action.ViewActions.clearText
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.closeSoftKeyboard
@@ -27,12 +24,12 @@ import com.geekbrains.tests.shared_test.BaseActivityTest
 import com.geekbrains.tests.shared_test.EMPTY_QUERY
 import com.geekbrains.tests.shared_test.QUERY_ALGOL
 import com.geekbrains.tests.shared_test.RESULT_ALGOL
+import com.geekbrains.tests.shared_test.waitFor
 import com.geekbrains.tests.view.details.DetailsActivity
 import com.geekbrains.tests.view.search.MainActivity
 import org.hamcrest.CoreMatchers.allOf
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.CoreMatchers.not
-import org.hamcrest.Matcher
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
@@ -64,18 +61,6 @@ class MainActivityEspressoTest : BaseActivityTest<MainActivity>() {
 
         onView(isRoot()).perform(waitFor(8000))
         onView(withId(R.id.totalCountTextView)).check(matches(withText(RESULT_ALGOL)))
-    }
-
-    private fun waitFor(delay: Long): ViewAction {
-        return object : ViewAction {
-            override fun getDescription(): String = "wait for $2 seconds"
-
-            override fun getConstraints(): Matcher<View> = isRoot()
-
-            override fun perform(uiController: UiController?, view: View?) {
-                uiController?.loopMainThreadForAtLeast(delay)
-            }
-        }
     }
 
     @Test
