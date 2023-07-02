@@ -17,25 +17,48 @@
         app:layout_constraintTop_toTopOf="parent"
         />
 
-    <EditText
-        android:id="@+id/searchEditText"
+    <LinearLayout
+        android:id="@+id/searchToolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/search_hint"
-        android:imeOptions="actionSearch"
-        android:inputType="text"
-        android:maxLines="1"
-        android:singleLine="true"
+        android:orientation="horizontal"
+        android:layout_marginTop="@dimen/margin"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        />
+
+        >
+
+        <EditText
+            android:id="@+id/searchEditText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:hint="@string/search_hint"
+            android:imeOptions="actionSearch"
+            android:inputType="text"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:layout_weight="2"
+            android:layout_marginStart="@dimen/margin"
+            />
+
+        <Button
+            android:id="@+id/searchButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/search_button"
+            android:layout_weight="1"
+            android:layout_marginHorizontal="@dimen/margin"
+            />
+
+    </LinearLayout>
 
     <Button
         android:id="@+id/toDetailsActivityButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/margin"
-        app:layout_constraintTop_toBottomOf="@id/searchEditText"
+        app:layout_constraintTop_toBottomOf="@id/searchToolbar"
         android:text="@string/to_details"
         />
 
@@ -50,6 +73,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/toDetailsActivityButton"
         tools:text="Number of results: 100"
+        android:layout_marginHorizontal="@dimen/margin"
         />
 
     <androidx.recyclerview.widget.RecyclerView
@@ -59,6 +83,7 @@
         android:layout_marginTop="@dimen/margin"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintTop_toBottomOf="@id/totalCountTextView"
+        android:layout_marginHorizontal="@dimen/margin"
         />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

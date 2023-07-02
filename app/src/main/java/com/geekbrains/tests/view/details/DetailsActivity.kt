@@ -13,6 +13,7 @@ import java.util.Locale
 class DetailsActivity : AppCompatActivity(), ViewDetailsContract {
 
     private lateinit var binding: ActivityDetailsBinding
+    val _binding get() = binding
     private val presenter: PresenterDetailsContract = DetailsPresenter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
