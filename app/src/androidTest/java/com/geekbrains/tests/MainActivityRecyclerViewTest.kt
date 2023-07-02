@@ -1,6 +1,10 @@
 package com.geekbrains.tests
 
+import android.view.View
+import android.widget.EditText
 import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.UiController
+import androidx.test.espresso.ViewAction
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.closeSoftKeyboard
 import androidx.test.espresso.action.ViewActions.pressImeActionButton
@@ -70,5 +74,55 @@ class MainActivityRecyclerViewTest : BaseActivityTest<MainActivity>() {
         onView(searchEditText).perform(click())
         onView(searchEditText).perform(replaceText(query), closeSoftKeyboard())
         onView(searchEditText).perform(pressImeActionButton())
+    }
+
+    private fun tapOnItemWithId(id: Int) = object : ViewAction {
+        override fun getDescription() = "Нажимаем на view c указанным id"
+
+        override fun getConstraints() = null
+
+        override fun perform(uiController: UiController, view: View) {
+            val v = view.findViewById(id) as View
+            v.performClick()
+        }
+    }
+
+    @Test
+    fun activitySearch_PerformClick() {
+        performSearch(QUERY_ALGOL)
+
+        onView(withId(R.id.recyclerView))
+            .perform(RecyclerViewActions
+                .actionOnItemAtPosition<SearchResultAdapter.SearchResultViewHolder>(
+                    0, tapOnItemWithId(R.id.checkbox)
+                )
+            )
+    }
+
+    private fun  typeTextInChildViewWithId(id: Int, textToBeTyped: String): ViewAction {
+        return object : ViewAction {
+            override fun getDescription() = "Описание действия"
+
+            override fun getConstraints() = null
+
+            override fun perform(uiController: UiController, view: View) {
+                val v = view.findViewById<View>(id) as EditText
+                v.setText(textToBeTyped)
+            }
+        }
+    }
+
+    @Test
+    fun activitySearch_performEditText() {
+        performSearch(QUERY_ALGOL)
+
+        onView(withId(R.id.recyclerView))
+            .perform(RecyclerViewActions
+                .actionOnItemAtPosition<SearchResultAdapter.SearchResultViewHolder>(
+                    10,
+                    typeTextInChildViewWithId(R.id.RVEditText,
+                        "RecyclerView test")
+                )
+            )
     }
 }

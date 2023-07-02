@@ -5,7 +5,9 @@ import com.geekbrains.tests.model.SearchResult
 import retrofit2.Response
 import kotlin.random.Random
 
-internal class GitHubRepository : RepositoryContract {
+internal class GitHubRepository(
+    private val gitHubApi: GitHubApi
+    ) : RepositoryContract {
 
     override fun searchGithub(
         query: String,
@@ -35,5 +37,10 @@ internal class GitHubRepository : RepositoryContract {
             )
         }
         return SearchResponse(list.size, list)
+    }
+
+    interface GitHubRepositoryCallback {
+        fun handleGitHubResponse(response: Response<SearchResponse?>?)
+        fun handleGitHubError()
     }
 }
