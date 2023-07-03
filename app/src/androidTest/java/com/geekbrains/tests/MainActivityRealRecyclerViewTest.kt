@@ -23,7 +23,6 @@ import com.geekbrains.tests.shared_test.QUERY_ALGOL
 import com.geekbrains.tests.shared_test.waitFor
 import com.geekbrains.tests.view.search.MainActivity
 import com.geekbrains.tests.view.search.SearchResultAdapter
-import org.hamcrest.CoreMatchers
 import org.hamcrest.CoreMatchers.allOf
 import org.hamcrest.Description
 import org.hamcrest.Matcher
