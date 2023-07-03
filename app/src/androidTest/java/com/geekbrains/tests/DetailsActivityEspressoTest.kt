@@ -18,7 +18,6 @@ import com.geekbrains.tests.shared_test.TEST_NUMBER_OF_RESULTS_PLUS_1
 import com.geekbrains.tests.shared_test.TEST_NUMBER_OF_RESULTS_ZERO
 import com.geekbrains.tests.view.details.DetailsActivity
 import junit.framework.TestCase
-import junit.framework.TestCase.assertEquals
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -72,25 +71,5 @@ class DetailsActivityEspressoTest : BaseActivityTest<DetailsActivity>() {
         onView(withId(R.id.decrementButton)).perform(click())
         onView(withId(R.id.totalCountTextView))
             .check(matches(withText(TEST_NUMBER_OF_RESULTS_MINUS_1)))
-    }
-
-    @Test
-    fun whenIncrementButtonClicked() {
-        scenario.onActivity {
-            it._binding.incrementButton.performClick()
-            val expectedCount = TEST_NUMBER_OF_RESULTS_PLUS_1
-            val actualCount = it._binding.totalCountTextView.text.toString()
-            assertEquals(expectedCount, actualCount)
-        }
-    }
-
-    @Test
-    fun whenDecrementButtonClicked() {
-        scenario.onActivity {
-            it._binding.decrementButton.performClick()
-            val expectedCount = TEST_NUMBER_OF_RESULTS_MINUS_1
-            val actualCount = it._binding.totalCountTextView.text.toString()
-            assertEquals(expectedCount,actualCount)
-        }
     }
 }
