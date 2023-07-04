@@ -1,6 +1,5 @@
-package com.geekbrains.tests.stubs
+package com.geekbrains.tests.presenter
 
-import com.geekbrains.tests.presenter.SchedulerProvider
 import io.reactivex.schedulers.Schedulers
 
 class SchedulerProviderStub : SchedulerProvider {

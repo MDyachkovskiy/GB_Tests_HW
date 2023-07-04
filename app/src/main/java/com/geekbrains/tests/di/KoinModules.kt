@@ -1,6 +1,5 @@
 package com.geekbrains.tests.di
 
-import com.geekbrains.tests.presenter.SchedulerProvider
 import com.geekbrains.tests.presenter.details.DetailsPresenter
 import com.geekbrains.tests.presenter.details.PresenterDetailsContract
 import com.geekbrains.tests.presenter.search.PresenterSearchContract

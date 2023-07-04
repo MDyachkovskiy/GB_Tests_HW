@@ -6,19 +6,21 @@ import android.view.inputmethod.EditorInfo
 import android.widget.TextView.OnEditorActionListener
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import com.geekbrains.tests.R
 import com.geekbrains.tests.databinding.ActivityMainBinding
+import com.geekbrains.tests.model.ScreenState
 import com.geekbrains.tests.model.SearchResult
-import com.geekbrains.tests.presenter.search.PresenterSearchContract
 import com.geekbrains.tests.view.details.DetailsActivity
-import org.koin.android.ext.android.inject
 import java.util.Locale
 
 class MainActivity : AppCompatActivity(), ViewSearchContract {
 
     private val adapter = SearchResultAdapter()
     private var totalCount: Int = 0
-    private val presenter: PresenterSearchContract by inject()
+    private val viewModel : SearchViewModel by lazy {
+        ViewModelProvider(this)[SearchViewModel::class.java]
+    }
 
     private lateinit var binding: ActivityMainBinding
     val _binding get() = binding
@@ -28,16 +30,39 @@ class MainActivity : AppCompatActivity(), ViewSearchContract {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setUI()
+        viewModel.subscribeToLiveData().observe(this){
+            onStateChange(it)
+        }
     }
 
-    override fun onStart() {
-        super.onStart()
-        presenter.onAttach(this)
-    }
+    private fun onStateChange(screenState: ScreenState) {
+        when(screenState) {
+            is ScreenState.Working -> {
+                val searchResponse = screenState.searchResponse
+                val totalCount = searchResponse.totalCount
+                binding.progressBar.visibility = View.GONE
+                with(binding.totalCountTextView) {
+                    visibility = View.VISIBLE
+                    text = String.format(
+                        Locale.getDefault(),
+                        getString(R.string.results_count),
+                        totalCount
+                    )
+                }
+                this.totalCount = totalCount!!
+                adapter.updateResults(searchResponse.searchResults!!)
+            }
 
-    override fun onStop() {
-        super.onStop()
-        presenter.onDetach()
+            is ScreenState.Error -> {
+                binding.progressBar.visibility = View.GONE
+                Toast.makeText(this,
+                screenState.error.message, Toast.LENGTH_SHORT).show()
+            }
+
+            is ScreenState.Loading -> {
+                binding.progressBar.visibility = View.VISIBLE
+            }
+        }
     }
 
     private fun setUI() {
@@ -50,7 +75,7 @@ class MainActivity : AppCompatActivity(), ViewSearchContract {
         binding.searchButton.setOnClickListener {
             val query = binding.searchEditText.text.toString()
             if (query.isNotBlank()) {
-                presenter.searchGitHub(query)
+                viewModel.searchGitHub(query)
             } else {
                 showEmptyTextToastMessage()
             }
@@ -67,7 +92,7 @@ class MainActivity : AppCompatActivity(), ViewSearchContract {
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                 val query = binding.searchEditText.text.toString()
                 if (query.isNotBlank()) {
-                    presenter.searchGitHub(query)
+                    viewModel.searchGitHub(query)
                     return@OnEditorActionListener true
                 } else {
                     showEmptyTextToastMessage()
