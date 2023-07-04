@@ -18,10 +18,12 @@ internal class GitHubRepository(
     }
 
     override fun searchGithub(query: String): Observable<SearchResponse> {
-        return Observable.just(generateSearchResponse())
+        return Observable.just(getFakeResponse())
     }
 
-    private fun generateSearchResponse() = getFakeResponse()
+    override suspend fun searchGithubAsync(query: String): SearchResponse {
+        return getFakeResponse()
+    }
 
     private fun getFakeResponse() : SearchResponse {
         val list: MutableList<SearchResult> = mutableListOf()

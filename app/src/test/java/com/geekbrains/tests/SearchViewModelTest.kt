@@ -9,24 +9,29 @@ import com.geekbrains.tests.presenter.SchedulerProviderStub
 import com.geekbrains.tests.repository.GitHubRepository
 import com.geekbrains.tests.view.search.SearchViewModel
 import io.reactivex.Observable
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
-import org.mockito.Mockito
 import org.mockito.Mockito.times
 import org.mockito.Mockito.verify
+import org.mockito.Mockito.`when`
 import org.mockito.MockitoAnnotations
 
 @RunWith(AndroidJUnit4::class)
+@ExperimentalCoroutinesApi
 class SearchViewModelTest {
-
-    private lateinit var searchViewModel:SearchViewModel
 
     @get:Rule
     var instantExecutorRule = InstantTaskExecutorRule()
+
+    @get:Rule
+    var testCoroutineRule = TestCoroutineRule()
+
+    private lateinit var searchViewModel: SearchViewModel
 
     @Mock
     private lateinit var repository: GitHubRepository
@@ -39,12 +44,13 @@ class SearchViewModelTest {
 
     companion object {
         private const val SEARCH_QUERY = "some query"
-        private const val ERROR_TEXT = "error"
+        private const val ERROR_TEXT = "Search results or total count are null"
+        private const val EXCEPTION_TEXT = "Response is null or unsuccessful"
     }
 
     @Test
     fun search_Test() {
-        Mockito.`when`(repository.searchGithub(SEARCH_QUERY)).thenReturn(
+        `when`(repository.searchGithub(SEARCH_QUERY)).thenReturn(
             Observable.just(SearchResponse(1, listOf()))
         )
 
@@ -54,32 +60,33 @@ class SearchViewModelTest {
     }
 
     @Test
-    fun liveData_TestReturnValueIsNotNull() {
-        val observer = Observer<ScreenState>{}
+    fun coroutines_TestReturnValueIsNotNull() {
+        testCoroutineRule.runBlockingTest {
+            val observer = Observer<ScreenState> {}
+            val liveData = searchViewModel.subscribeToLiveData()
 
-        val liveData = searchViewModel.subscribeToLiveData()
+            `when`(repository.searchGithubAsync(SEARCH_QUERY)).thenReturn(
+                SearchResponse(1, listOf())
+            )
 
-        Mockito.`when`(repository.searchGithub(SEARCH_QUERY)).thenReturn(
-            Observable.just(SearchResponse(1, listOf()))
-        )
+            try {
+                liveData.observeForever(observer)
+                searchViewModel.searchGitHub(SEARCH_QUERY)
 
-        try {
-            liveData.observeForever(observer)
-            searchViewModel.searchGitHub(SEARCH_QUERY)
-
-            Assert.assertNotNull(observer)
-        } finally {
-            liveData.removeObserver(observer)
+                Assert.assertNotNull(liveData.value)
+            } finally {
+                liveData.removeObserver(observer)
+            }
         }
     }
 
     @Test
     fun liveData_TestReturnValueIsError() {
-        val observer = Observer<ScreenState>{}
+        val observer = Observer<ScreenState> {}
         val liveData = searchViewModel.subscribeToLiveData()
         val error = Throwable(ERROR_TEXT)
 
-        Mockito.`when`(repository.searchGithub(SEARCH_QUERY)).thenReturn(
+        `when`(repository.searchGithub(SEARCH_QUERY)).thenReturn(
             Observable.error(error)
         )
 
@@ -96,12 +103,12 @@ class SearchViewModelTest {
 
     @Test
     fun liveData_TestReturnValueIsWorking() {
-        val observer = Observer<ScreenState>{}
+        val observer = Observer<ScreenState> {}
         val liveData = searchViewModel.subscribeToLiveData()
 
         val mockedSearchResponse = SearchResponse(1, listOf())
 
-        Mockito.`when`(repository.searchGithub(SEARCH_QUERY)).thenReturn(
+       `when`(repository.searchGithub(SEARCH_QUERY)).thenReturn(
             Observable.just(mockedSearchResponse)
         )
 
@@ -118,10 +125,10 @@ class SearchViewModelTest {
 
     @Test
     fun liveData_TestReturnValueIsError_NullData() {
-        val observer = Observer<ScreenState>{}
+        val observer = Observer<ScreenState> {}
         val liveData = searchViewModel.subscribeToLiveData()
 
-        Mockito.`when`(repository.searchGithub(SEARCH_QUERY)).thenReturn(
+        `when`(repository.searchGithub(SEARCH_QUERY)).thenReturn(
             Observable.just(SearchResponse(null, null))
         )
 
@@ -130,9 +137,49 @@ class SearchViewModelTest {
             searchViewModel.searchGitHub(SEARCH_QUERY)
 
             val value: ScreenState.Error = liveData.value as ScreenState.Error
-            Assert.assertEquals(value.error.message, "Search results or total count are null")
+            Assert.assertEquals(value.error.message, ERROR_TEXT)
         } finally {
             liveData.removeObserver(observer)
+        }
+    }
+
+    @Test
+    fun coroutines_TestReturnValueIsError() {
+        testCoroutineRule.runBlockingTest {
+            val observer = Observer<ScreenState> {}
+            val liveData = searchViewModel.subscribeToLiveData()
+
+            `when`(repository.searchGithubAsync(SEARCH_QUERY)).thenReturn(
+                SearchResponse(null, listOf())
+            )
+
+            try {
+                liveData.observeForever(observer)
+                searchViewModel.searchGitHub(SEARCH_QUERY)
+
+                val value: ScreenState.Error = liveData.value as ScreenState.Error
+                Assert.assertEquals(value.error.message, ERROR_TEXT)
+            } finally {
+                liveData.removeObserver(observer)
+            }
+        }
+    }
+
+    @Test
+    fun coroutines_TestException() {
+        testCoroutineRule.runBlockingTest {
+            val observer = Observer<ScreenState>{}
+            val liveData = searchViewModel.subscribeToLiveData()
+
+            try {
+                liveData.observeForever(observer)
+                searchViewModel.searchGitHub(SEARCH_QUERY)
+
+                val value: ScreenState.Error = liveData.value as ScreenState.Error
+                Assert.assertEquals(value.error.message, EXCEPTION_TEXT)
+            } finally {
+                liveData.removeObserver(observer)
+            }
         }
     }
 }

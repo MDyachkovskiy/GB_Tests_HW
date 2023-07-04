@@ -2,6 +2,7 @@ package com.geekbrains.tests.repository
 
 import com.geekbrains.tests.model.SearchResponse
 import io.reactivex.Observable
+import kotlinx.coroutines.Deferred
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Headers
@@ -22,4 +23,11 @@ internal interface GitHubApi {
     fun searchGithubRx(
         @Query("q") term: String?
     ) : Observable<SearchResponse>
+
+    @Headers("Accept: application/vnd.github.mercy_preview+json")
+    @GET("search/repositories")
+    suspend fun searchGithubAsync(
+        @Query("q") term: String?
+    ) : Deferred<SearchResponse>
+
 }
