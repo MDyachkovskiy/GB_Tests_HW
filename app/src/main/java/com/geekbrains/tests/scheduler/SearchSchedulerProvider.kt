@@ -1,6 +1,5 @@
-package com.geekbrains.tests.presenter.search
+package com.geekbrains.tests.scheduler
 
-import com.geekbrains.tests.presenter.SchedulerProvider
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 

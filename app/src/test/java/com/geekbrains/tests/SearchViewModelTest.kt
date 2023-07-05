@@ -5,7 +5,7 @@ import androidx.lifecycle.Observer
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.geekbrains.tests.model.ScreenState
 import com.geekbrains.tests.model.SearchResponse
-import com.geekbrains.tests.presenter.SchedulerProviderStub
+import com.geekbrains.tests.scheduler.SchedulerProviderStub
 import com.geekbrains.tests.repository.GitHubRepository
 import com.geekbrains.tests.view.search.SearchViewModel
 import io.reactivex.Observable

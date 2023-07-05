@@ -26,7 +26,7 @@ internal interface GitHubApi {
 
     @Headers("Accept: application/vnd.github.mercy_preview+json")
     @GET("search/repositories")
-    suspend fun searchGithubAsync(
+    fun searchGithubAsync(
         @Query("q") term: String?
     ) : Deferred<SearchResponse>
 

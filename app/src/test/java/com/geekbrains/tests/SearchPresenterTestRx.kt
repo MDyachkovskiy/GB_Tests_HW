@@ -1,9 +1,8 @@
 package com.geekbrains.tests
 
 import com.geekbrains.tests.model.SearchResponse
-import com.geekbrains.tests.presenter.search.SearchPresenter
 import com.geekbrains.tests.repository.GitHubRepository
-import com.geekbrains.tests.presenter.SchedulerProviderStub
+import com.geekbrains.tests.scheduler.SchedulerProviderStub
 import com.geekbrains.tests.view.search.ViewSearchContract
 import io.reactivex.Observable
 import org.junit.Before

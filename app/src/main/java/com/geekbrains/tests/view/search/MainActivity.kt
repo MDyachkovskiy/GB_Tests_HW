@@ -6,21 +6,20 @@ import android.view.inputmethod.EditorInfo
 import android.widget.TextView.OnEditorActionListener
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import com.geekbrains.tests.R
 import com.geekbrains.tests.databinding.ActivityMainBinding
 import com.geekbrains.tests.model.ScreenState
 import com.geekbrains.tests.model.SearchResult
 import com.geekbrains.tests.view.details.DetailsActivity
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.Locale
 
 class MainActivity : AppCompatActivity(), ViewSearchContract {
 
     private val adapter = SearchResultAdapter()
     private var totalCount: Int = 0
-    private val viewModel : SearchViewModel by lazy {
-        ViewModelProvider(this)[SearchViewModel::class.java]
-    }
+
+    private val viewModel : SearchViewModel by viewModel()
 
     private lateinit var binding: ActivityMainBinding
     val _binding get() = binding

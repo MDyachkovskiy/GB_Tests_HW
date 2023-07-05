@@ -8,8 +8,7 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import com.geekbrains.tests.R
 import com.geekbrains.tests.databinding.FragmentDetailsBinding
-import com.geekbrains.tests.presenter.details.PresenterDetailsContract
-import org.koin.android.ext.android.inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.Locale
 
 class DetailsFragment : Fragment(), ViewDetailsContract {
@@ -17,7 +16,7 @@ class DetailsFragment : Fragment(), ViewDetailsContract {
     private var _binding: FragmentDetailsBinding? = null
     private val binding get() = _binding!!
 
-    private val presenter: PresenterDetailsContract by inject()
+    private val viewModel: DetailsViewModel by viewModel()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -30,7 +29,6 @@ class DetailsFragment : Fragment(), ViewDetailsContract {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        presenter.onAttach(this)
         setUI()
     }
 
@@ -46,20 +44,23 @@ class DetailsFragment : Fragment(), ViewDetailsContract {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-        presenter.onDetach()
     }
 
     private fun setUI() {
         arguments?.let {
             val counter = it.getInt(TOTAL_COUNT_EXTRA, 0)
-            presenter.setCounter(counter)
+            viewModel.setCounter(counter)
             setCountText(counter)
         }
         binding.decrementButton.setOnClickListener {
-            presenter.onDecrement()
+            viewModel.onDecrement()
         }
         binding.incrementButton.setOnClickListener {
-            presenter.onIncrement()
+            viewModel.onIncrement()
+        }
+
+        viewModel.countLiveData.observe(viewLifecycleOwner){ count ->
+            setCountText(count)
         }
     }
 

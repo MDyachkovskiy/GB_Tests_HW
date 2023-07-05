@@ -4,8 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.geekbrains.tests.model.ScreenState
-import com.geekbrains.tests.presenter.SchedulerProvider
-import com.geekbrains.tests.presenter.search.SearchSchedulerProvider
+import com.geekbrains.tests.scheduler.SchedulerProvider
+import com.geekbrains.tests.scheduler.SearchSchedulerProvider
 import com.geekbrains.tests.repository.GitHubApi
 import com.geekbrains.tests.repository.GitHubRepository
 import com.geekbrains.tests.repository.NetworkModule
