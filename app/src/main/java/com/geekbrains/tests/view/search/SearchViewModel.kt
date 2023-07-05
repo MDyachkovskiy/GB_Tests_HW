@@ -27,7 +27,7 @@ class SearchViewModel(
     private val _liveData = MutableLiveData<ScreenState>()
     private val liveData: LiveData<ScreenState> = _liveData
 
-    override fun onCleared() {
+    public override fun onCleared() {
         super.onCleared()
         viewModelCoroutineScope.coroutineContext.cancelChildren()
     }
@@ -49,13 +49,18 @@ class SearchViewModel(
         _liveData.value = ScreenState.Loading
         viewModelCoroutineScope.launch {
             val searchResponse = repository.searchGithubAsync(searchQuery)
-            val searchResults = searchResponse.searchResults
-            val totalCount = searchResponse.totalCount
-            if (searchResults != null && totalCount != null) {
-                _liveData.value = ScreenState.Working(searchResponse)
+            if(searchResponse != null) {
+                val searchResults = searchResponse.searchResults
+                val totalCount = searchResponse.totalCount
+                if (searchResults != null && totalCount != null) {
+                    _liveData.value = ScreenState.Working(searchResponse)
+                } else {
+                _liveData.value = ScreenState.Error(
+                    Throwable("Search results or total count are null"))
+                }
             } else {
                 _liveData.value = ScreenState.Error(
-                    Throwable("Search results or total count are null")
+                    Throwable("Search response is null")
                 )
             }
         }
