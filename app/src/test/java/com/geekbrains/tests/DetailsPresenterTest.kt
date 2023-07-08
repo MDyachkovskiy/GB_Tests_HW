@@ -1,6 +1,6 @@
 package com.geekbrains.tests
 
-import com.geekbrains.tests.presenter.details.DetailsPresenter
+import com.geekbrains.tests.scheduler.details.DetailsPresenter
 import com.geekbrains.tests.view.details.ViewDetailsContract
 import org.junit.Before
 import org.junit.Test

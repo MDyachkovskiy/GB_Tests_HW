@@ -4,7 +4,6 @@ import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import android.widget.TextView
-import com.geekbrains.tests.presenter.search.PresenterSearchContract
 import com.geekbrains.tests.shared_test.BaseActivityTest
 import com.geekbrains.tests.view.search.MainActivity
 import junit.framework.TestCase.assertEquals
